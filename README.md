@@ -24,7 +24,6 @@ If not given, the output name will be of the format 'composite_{}x{}.png'
 downloader.py [-h] [-g [GPGHOME]] [-c [CONF_PATH]] [-u [USERNAME]]  
                      [-p [PROGRESS_FILE]] [-t [TARGET_DIRECTORY]]  
                      [-l [LOGFILE]]  
-NEEDS TO BE EXTENDED TO GET MORE THAN 3200 TWEETS!!!!
 Requires: tweepy, gnupg, wget  (gnupg can easily be removed if you don't mind having your secrets unencrypted)  
 Paths are hardcoded, so use of this script means you have to modify the default paths in the argparse arguments, or pass them  
 as commandline arguments.  
