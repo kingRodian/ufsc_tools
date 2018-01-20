@@ -117,7 +117,7 @@ class Downloader:
             name = text[ : text.find(' http')].replace(' ', '')
             extension = url[url.rfind('.') : ]
             filename = name + extension
-            self.logger.info('Downloading: {}.'.format(name + extension))
+            self.logger.info('Downloading: {}.'.format(filename))
             if filename not in self.filelist:
                 try:
                     wget.download(url, out= self.target_directory + filename)
