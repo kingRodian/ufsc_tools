@@ -156,7 +156,7 @@ def main():
     parser.add_argument('-u', '--username', default='unfavorablesemi', type=str, nargs='?',
             help='Twitter username from which we download videos.')
     parser.add_argument('-p', '--progress_file', default='progress_unfavorablesemi', type=str, nargs='?',
-            help='File which keeps track of the latest id')
+            help='File which keeps track of tweets that have been checked out and the status of an eventual download.')
     parser.add_argument('-t', '--target_directory', default='/home/king/arg/unfavorablesemicircle/twitter/video/', type=str, nargs='?',
             help='Path to target video directory.')
     parser.add_argument('-l', '--logfile', default='downloader.log', type=str, nargs='?',

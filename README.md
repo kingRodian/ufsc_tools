@@ -4,8 +4,23 @@ More info about them at https://www.unfavorablesemicircle.com/
 Maybe they are poorly written or messy, but I've found use for them at least.  
   
   
-makecomposite.py [-h] [-cw [CELLWIDTH]] [-ch [CELLHEIGHT]]  
+makecomposite.py [-h] [-i [INPUTDIR]] [-cw [CELLWIDTH]]  
+                        [-ch [CELLHEIGHT]]  
                         width [outfile]  
+  
+positional arguments:  
+  width                 Width of composite  
+  outfile               Filename of composite image output.  
+  
+optional arguments:  
+-h, --help            show this help message and exit  
+  -i [INPUTDIR], --inputdir [INPUTDIR]  
+                        The directory from which we get our images.  
+  -cw [CELLWIDTH], --cellwidth [CELLWIDTH]  
+                        The width to shrink each individual image down to.  
+  -ch [CELLHEIGHT], --cellheight [CELLHEIGHT]  
+                        The height to shrink each individual image down to.  
+  
 Requires: PIL  
 Given a directory full of png images with filenames consisting of a number and the .png extension,  
 will combine them all into a composite image.  
@@ -21,9 +36,27 @@ The name of the resulting composite can be specified with an optional extra argu
 If not given, the output name will be of the format 'composite_{}x{}.png'  
   
   
+  
+  
 downloader.py [-h] [-g [GPGHOME]] [-c [CONF_PATH]] [-u [USERNAME]]  
                      [-p [PROGRESS_FILE]] [-t [TARGET_DIRECTORY]]  
                      [-l [LOGFILE]]  
+  
+optional arguments:  
+  -h, --help            show this help message and exit  
+  -g [GPGHOME], --gpghome [GPGHOME]  
+                        Path to gpg home.  
+  -c [CONF_PATH], --conf_path [CONF_PATH]  
+                        Path to config, logs and tokens used for  
+                        authentication.  
+  -u [USERNAME], --username [USERNAME]  
+                        Twitter username from which we download videos.  
+  -p [PROGRESS_FILE], --progress_file [PROGRESS_FILE]  
+                        File which keeps track of tweets that have been checked out and the status of an eventual download.  
+  -t [TARGET_DIRECTORY], --target_directory [TARGET_DIRECTORY]  
+                        Path to target video directory.  
+  -l [LOGFILE], --logfile [LOGFILE]  
+                        File to which we log.  
 Requires: tweepy, gnupg, wget  (gnupg can easily be removed if you don't mind having your secrets unencrypted)  
 Paths are hardcoded, so use of this script means you have to modify the default paths in the argparse arguments, or pass them  
 as commandline arguments.  

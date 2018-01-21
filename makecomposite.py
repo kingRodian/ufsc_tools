@@ -21,6 +21,7 @@ class CompositeGenerator:
         self.height = ceil(len(files) / self.width)
         self.cellsize = self.cellwidth, self.cellheight = args.cellwidth, args.cellheight
         self.totalsize = self.totalwidth, self.totalheight = self.width * self.cellwidth, self.height * self.cellheight
+        self.inputdir = args.inputdir
         self.files = files
         self.mode = mode
         self.outfile = args.outfile
@@ -28,12 +29,11 @@ class CompositeGenerator:
 
     def create_composite(self):
         for i, filename in enumerate(self.files):
-            image = Image.open(filename).convert(self.mode)
+            image = Image.open(self.inputdir + filename).convert(self.mode)
             image = image.resize(self.cellsize)
             cellpos = (i % self.width, i // self.width)
-            box = (cellpos[0] * self.cellwidth, cellpos[1] * self.cellheight,
-                    (cellpos[0] + 1) * self.cellwidth, (cellpos[1] + 1) * self.cellheight)
-            self.composite.paste(image, box)
+            pastepos = (cellpos[0] * self.cellwidth, cellpos[1] * self.cellheight)
+            self.composite.paste(image, pastepos)
 
     def save_composite(self):
         if self.outfile:
@@ -57,6 +57,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('width', type=int,
             help='Width of composite')
+    parser.add_argument('-i', '--inputdir', default='./', type=str, nargs='?',
+            help='The directory from which we get our images.')
     parser.add_argument('-cw', '--cellwidth', default=1, type=int, nargs='?',
             help='The width to shrink each individual image down to.')
     parser.add_argument('-ch', '--cellheight', default=1, type=int, nargs='?',
@@ -65,7 +67,7 @@ def main():
             help='Filename of composite image output.')
 
     args = parser.parse_args()
-    files = [filename for filename in os.listdir() if checkfilename(filename)]
+    files = [filename for filename in os.listdir(args.inputdir) if checkfilename(filename)]
 
 
     generator = CompositeGenerator(args, files)
