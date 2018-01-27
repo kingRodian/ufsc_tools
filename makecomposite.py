@@ -16,14 +16,14 @@ import os
 from PIL import Image
 
 class CompositeGenerator:
-    def __init__(self, args, files, mode='RGB'):
+    def __init__(self, args, files):
         self.width = args.width
         self.height = ceil(len(files) / self.width)
         self.cellsize = self.cellwidth, self.cellheight = args.cellwidth, args.cellheight
         self.totalsize = self.totalwidth, self.totalheight = self.width * self.cellwidth, self.height * self.cellheight
         self.inputdir = args.inputdir
+        self.mode = args.mode
         self.files = files
-        self.mode = mode
         self.outfile = args.outfile
         self.composite = Image.new(self.mode, self.totalsize)
 
@@ -39,7 +39,7 @@ class CompositeGenerator:
         if self.outfile:
             filename = self.outfile
         else:
-            filename = 'composite_{}x{}.png'.format(self.width, self.height)
+            filename = 'composite_{}_{}x{}_{}x{}.png'.format(self.mode, self.width, self.height, self.cellwidth, self.cellheight)
         self.composite.save(filename)
 
 
@@ -57,14 +57,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('width', type=int,
             help='Width of composite')
+    parser.add_argument('outfile', default='', type=str, nargs='?',
+            help='Filename of composite image output.')
     parser.add_argument('-i', '--inputdir', default='./', type=str, nargs='?',
             help='The directory from which we get our images.')
     parser.add_argument('-cw', '--cellwidth', default=1, type=int, nargs='?',
             help='The width to shrink each individual image down to.')
     parser.add_argument('-ch', '--cellheight', default=1, type=int, nargs='?',
             help='The height to shrink each individual image down to.')
-    parser.add_argument('outfile', default='', type=str, nargs='?',
-            help='Filename of composite image output.')
+    parser.add_argument('-m', '--mode', default='RGB', type=str, nargs='?',
+            help='Mode to create image in.')
 
     args = parser.parse_args()
     files = [filename for filename in os.listdir(args.inputdir) if checkfilename(filename)]
