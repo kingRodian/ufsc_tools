@@ -43,7 +43,7 @@ class Downloader:
         self.logger.info('Authorized. Checking progress...')
 
         # See if there is a file describing the progress which we can use
-        self.filelist = set(os.listdir())
+        self.filelist = set(os.listdir(self.conf_path))
         self._check_progress()
 
     def _check_progress(self):
