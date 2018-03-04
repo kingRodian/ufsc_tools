@@ -14,6 +14,7 @@ import argparse
 from math import ceil
 import os
 from PIL import Image
+import re
 
 class CompositeGenerator:
     def __init__(self, args, files):
@@ -43,20 +44,12 @@ class CompositeGenerator:
         self.composite.save(filename)
 
 
-def checkfilename(filename):
-    if '.png' not in filename:
-        return False
-    dotindex = filename.find('.')
-    try:
-        number = int(filename[:dotindex])
-    except ValueError:
-        return False
-    return True
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('width', type=int,
             help='Width of composite')
+    parser.add_argument('-r', '--regex', default='(image\d+\.png)', type=str, nargs='?',
+            help='Regex for determining which files to take as input.')
     parser.add_argument('outfile', default='', type=str, nargs='?',
             help='Filename of composite image output.')
     parser.add_argument('-i', '--inputdir', default='./', type=str, nargs='?',
@@ -69,7 +62,8 @@ def main():
             help='Mode to create image in.')
 
     args = parser.parse_args()
-    files = [filename for filename in os.listdir(args.inputdir) if checkfilename(filename)]
+    file_expr = re.compile(args.regex)
+    files = [filename for filename in os.listdir(args.inputdir) if file_expr.search(filename)]
 
 
     generator = CompositeGenerator(args, files)

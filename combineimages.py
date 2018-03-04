@@ -7,6 +7,7 @@ from math import ceil
 import os
 from PIL import Image
 from PIL import ImageChops
+import re
 
 class Combinator:
     def __init__(self, args, files):
@@ -51,25 +52,18 @@ class Combinator:
         self.image.save(filename)
 
 
-def checkfilename(filename):
-    if '.png' not in filename:
-        return False
-    dotindex = filename.find('.')
-    try:
-        number = int(filename[:dotindex])
-    except ValueError:
-        return False
-    return True
-
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--regex', default='(image\d+\.png)', type=str, nargs='?',
+            help='Regex for determining which files to take as input.')
     parser.add_argument('outfile', default='', type=str, nargs='?',
             help='Filename of combination image output.')
     parser.add_argument('-m', '--mode', default='difference', type=str, nargs='?',
             help='Channel operation to perform on images.')
 
     args = parser.parse_args()
-    files = [filename for filename in os.listdir() if checkfilename(filename)]
+    file_expr = re.compile(args.regex)
+    files = [filename for filename in os.listdir() if file_expr.search(filename)]
 
 
     generator = Combinator(args, files)
