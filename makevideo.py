@@ -7,7 +7,6 @@ from PIL import Image
 import random
 
 
-
 class VideoCreator:
     def __init__(self, args):
         self.infile = args.infile
@@ -28,7 +27,6 @@ class VideoCreator:
         s = './' + s
         os.mkdir(s)
         return s
-
 
     def create_images(self):
         try:
@@ -73,6 +71,6 @@ def main():
 
     videocreator = VideoCreator(args)
 
-
+    
 if __name__ == '__main__':
     main()
