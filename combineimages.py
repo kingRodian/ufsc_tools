@@ -54,16 +54,16 @@ class Combinator:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--regex', default='(image\d+\.png)', type=str, nargs='?',
-            help='Regex for determining which files to take as input.')
     parser.add_argument('outfile', default='', type=str, nargs='?',
             help='Filename of combination image output.')
     parser.add_argument('-m', '--mode', default='difference', type=str, nargs='?',
-            help='Channel operation to perform on images.')
+            help='Channel operation to perform on images (blend, darker, difference, lighter, multiply, screen, subtract.')
+    parser.add_argument('-r', '--regex', default='(image\d+\.png)', type=str, nargs='?',
+            help='Regex for determining which files to take as input.')
 
     args = parser.parse_args()
     file_expr = re.compile(args.regex)
-    files = [filename for filename in os.listdir() if file_expr.search(filename)]
+    files = [filename for filename in os.listdir('.') if file_expr.search(filename)]
 
 
     generator = Combinator(args, files)
