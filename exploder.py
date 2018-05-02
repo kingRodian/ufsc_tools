@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 
 import argparse
-import ffmpeg
 import os
 from PIL import Image
 import random
 
 
-class VideoCreator:
+
+class Exploder:
     def __init__(self, args):
         self.infile = args.infile
-        self.outfile = args.outfile
         self.outprefix = args.outprefix
-        self.fps = args.fps
         self.width = args.width
         self.height = args.height
+        # This is for random pixel noise
+        self.rand_population = [0, 1, 2, 3]
+        self.rand_weights = [90, 7, 2, 1]
         self.tmpdir = self.create_tmpdir()
         self.create_images()
-        self.create_video()
 
     def create_tmpdir(self):
         s = 'tmpdir'
@@ -27,6 +27,25 @@ class VideoCreator:
         s = './' + s
         os.mkdir(s)
         return s
+
+    def clamp(self, value):
+        return max(min(value, 255), 0)
+
+    def create_noise(self, img):
+        # This should really be rewritten, very slow
+        rand_num = random.choices(self.rand_population, self.rand_weights)[0]
+        for _ in range(rand_num):
+            pos = tuple((random.randrange(0, img.width), random.randrange(0, img.height)))
+            op = random.randint(0, 1) # Add or subtract
+            factor = random.random()
+            if op == 0:
+                factor += 1
+            else:
+                factor -= 1;
+            color = img.getpixel((0,0))
+            new_color = tuple((self.clamp(int(color[i] * factor)) for i in range(3)))
+            img.putpixel(pos, new_color)
+
 
     def create_images(self):
         try:
@@ -38,30 +57,21 @@ class VideoCreator:
         data = list(img.getdata())
         digits = len(str(len(data)))
         self.digits = digits
+        pix_num = self.width * self.height
         for i, pixel in enumerate(data):
             new_img = Image.new('RGB', (self.width, self.height), pixel)
+            self.create_noise(new_img)
             number = str(i).zfill(digits)
             filename = self.outprefix + number + '.png'
             new_img.save(self.tmpdir + '/' + filename)
-
-    def create_video(self):
-        input_format = self.tmpdir + '/' + self.outprefix + '%0' + str(self.digits) + 'd.png'
-        stream = ffmpeg.input(input_format)
-        stream = ffmpeg.filter_(stream, 'fps', fps=self.fps, round='up')
-        stream = ffmpeg.output(stream, self.outfile)
-        ffmpeg.run(stream)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('infile', type=str,
             help='Image file to convert.')
-    parser.add_argument('-o', '--outfile', type=str, default='out.mp4',
-            help='Name of output video.')
     parser.add_argument('-p', '--outprefix', type=str, default='image',
             help='Prefix for output images.')
-    parser.add_argument('-f', '--fps', type=int, default=30,
-            help='Fps for output video.')
     parser.add_argument('-x', '--width', type=int, default=50,
             help='Width of output images.')
     parser.add_argument('-y', '--height', type=int, default=50,
@@ -69,8 +79,8 @@ def main():
     parser.add_argument
     args = parser.parse_args()
 
-    videocreator = VideoCreator(args)
+    videocreator = Exploder(args)
 
-    
+
 if __name__ == '__main__':
     main()
