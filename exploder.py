@@ -24,7 +24,7 @@ class Exploder:
             s = ''.join( [ chr(random.randint(41, 126)) for _ in range(10)  ] )
         s = './' + s
         os.mkdir(s)
-        self.tempdir = s
+        self.tmpdir = s
 
     def clamp(self, value):
         return max(min(value, 255), 0)
