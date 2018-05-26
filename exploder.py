@@ -21,7 +21,7 @@ class Exploder:
         s = 'tmpdir'
         while s in os.listdir():
             # Create random string for tmp dir name
-            s = ''.join( [ chr(random.randint(41, 126)) for _ in range(10)  ] )
+            s = ''.join( [ chr(random.randint(64, 90)) for _ in range(10)  ] )
         s = './' + s
         os.mkdir(s)
         self.tmpdir = s
