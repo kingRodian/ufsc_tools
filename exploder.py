@@ -16,8 +16,6 @@ class Exploder:
         # This is for random pixel noise
         self.rand_population = [0, 1, 2, 3]
         self.rand_weights = [90, 7, 2, 1]
-        self.tmpdir = self.create_tmpdir()
-        self.create_images()
 
     def create_tmpdir(self):
         s = 'tmpdir'
@@ -26,7 +24,7 @@ class Exploder:
             s = ''.join( [ chr(random.randint(41, 126)) for _ in range(10)  ] )
         s = './' + s
         os.mkdir(s)
-        return s
+        self.tempdir = s
 
     def clamp(self, value):
         return max(min(value, 255), 0)
@@ -79,7 +77,9 @@ def main():
     parser.add_argument
     args = parser.parse_args()
 
-    videocreator = Exploder(args)
+    exploder = Exploder(args)
+    exploder.create_tmpdir()
+    exploder.create_images()
 
 
 if __name__ == '__main__':
